@@ -1,13 +1,11 @@
-pragma circom 2.0.0;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.17;
 
-template MiMC5() {
-    signal input x;
-    signal input k;
-    signal output h;
-
-    var nRounds = 10;
-
-    var c[nRounds] = [
+contract Hasher {
+    
+    uint256 p = 21888242871839275222246405745257275088548364400416034343698204186575808495617;
+    uint8 nRounds = 10;
+    uint256[10] c = [
         0,
         21469745217645236226405533686231592324177671190346326883245530828586381403876,
         50297292308054131785073003188640636012765603289604974664717077154647718767691,
@@ -20,22 +18,23 @@ template MiMC5() {
         19720773146379732435540009001854231484085729453524050584265326241021328895041
     ];
 
-    signal lastOutput[nRounds + 1];
-    var base[nRounds];
-    signal base2[nRounds];
-    signal base4[nRounds];
+    function MiMC5(uint256 x, uint256 k) public view returns(uint256 h) {
+        uint256 lastOutput = x;
 
-    lastOutput[0] <== x;
+        uint256 base;
+        uint256 base2;
+        uint256 base4;
 
-    for(var i = 0; i < nRounds; i++){
-        base[i] = lastOutput[i] + k + c[i];
-        base2[i] <== base[i] * base[i];
-        base4[i] <== base2[i] * base2[i];
+        for(uint8 i = 0; i < nRounds; i++){
+            base = addmod(lastOutput, k, p);
+            base = addmod(base, c[i], p);
+            
+            base2 = mulmod(base, base, p);
+            base4 = mulmod(base2, base2, p);
 
-        lastOutput[i + 1] <== base4[i] * base[i];
+            lastOutput = mulmod(base4, base, p);
+        }
+
+        h = addmod(lastOutput, k, p);
     }
-
-    h <== lastOutput[nRounds] + k;
 }
-
-component main = MiMC5();

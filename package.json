@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "circom2": "^0.2.13",
+    "ethers": "^5.7.2",
     "snarkjs": "^0.7.0"
   }
 }
