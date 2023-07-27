@@ -63,16 +63,18 @@ How to do all the above mentioned process with `solidity` `snarkJs` and `circom`
 
 ## Creating ceremony file
 
-`npx snarkjs powersoftau new bn128 12 ceremony_0000.ptau -v``
- - powersoftau : name of ceremony
- - bn128 : name of eleptic curve for polynomial evaluation
- - 12 : number of maximum constraint (ie: 2 ** 12)
- - ceremony_0000.ptau : name of ceremony file. It's conventional to name the file with 0000 and once - - people start ading randomness they increase the number.
- - v : verbose
+`npx snarkjs powersoftau new bn128 12 ceremony_0000.ptau -v`
+ - `powersoftau` : name of ceremony
+ - `bn128` : name of eleptic curve for polynomial evaluation
+ - `12` : number of maximum constraint (ie: 2 ** 12)
+ - `ceremony_0000.ptau` : name of ceremony file. It's conventional to name the file with 0000 and once people start ading randomness they increase the number.
+ - `v` : verbose
 
 ## verifying ceremony file
-Once the next contributor receives the ceremony file, it a good thing to verify(check if it valid and not corrupted) the ceremony first then contribute to it.
+Once the next contributor receives the ceremony file, it a good thing to `verify`(check if it is valid and not corrupted) the ceremony first then contribute to it.
+
 `npx snarkjs powersoftau verify ceremony_0000.ptau`
+
 if it says `powersoftau OK` it's a valid file.
 here:
 - `powersoftau` is the name of the ceremony
@@ -80,6 +82,7 @@ here:
 
 ## adding randomness to ceremony file / setup procedure
 In real life cenario this file will be passed to other people and they will add randomness to this file. Just after the contribution to the ceremony file those randomness should be discarded.
+
 `npx snarkjs powersoftau contribute ceremony_0000.ptau ceremony_0001.ptau -v`
 
 here:
@@ -94,7 +97,9 @@ Note: we only need the final ceremony file so we can delete intermidiate ceremon
 
 ## Preparing the file for phase 2
 Till now the ceremony process was independent from the `circuit` but in phase 2 we will introduce `circuit` to the `ceremony` file. This process is done once all contributor have added randomness to the ceremony.
+
 `npx snarkjs powersoftau prepare phase2 ceremony_0001.ptau ceremony_final.ptau -v`
+
 here:
 - `powersoftau` is the name of the ceremony
 - `ceremony_0001.ptau` is the input file name
@@ -102,7 +107,9 @@ here:
 
 ## Introducing Circuit to Ceremony file
 Before doing that we need to compile the circuit: `npx circom2 circuit.circom --r1cs`
+
 Feeding `circuit` to `ceremony` file : `npx snarkjs groth16 setup circuit.r1cs ceremony_final.ptau setup_0000.zkey`
+
 here
  - `circuit.r1cs` rics representation of the circuit
  - `ceremony_final.ptau` phase 2 file
@@ -110,16 +117,19 @@ here
 
  ## Adding randomness to the zkey file
  It's a good idea to add additional randomness to the `zkey` file
+
 `npx snarkjs zkey contribute setup_0000.zkey setup_final.zkey`
 
 ## Verifying zkey file
 Since zkey is made from combining `circuit` and `ceremony`, we will need both the file to verify the zkey.
+
 `npx snarkjs zkey verify circuit.r1cs ceremony_final.ptau setup_final.zkey`
 
 ## Generating Proofs
 - Create a `input.son` file with all the required inputs
 - compile the `circuit` to `wasm` - `npx circom2 circuit.circom --wasm`
 - Generating the proof `npx snarkjs groth16 fullprove input.json circuit_js/circuit.wasm setup_final.zkey proof.json public.json`
+
 here
 - `input.json` is the input file
 - `circuit_js/circuit.wasm` is the wasm representation of circuit
@@ -129,10 +139,14 @@ here
 
 ## Generating Verifier Smart Contract
 SnarkJs can generate the `verifier smart` contract from the `zkey`file.
+
 `npx snarkjs zkey export solidityverifier setup_final.zkey Verifier.sol`
+
 Deploy this smart contract to chain
 
 ## Generating proof string
 We need to generate the proof string to pass it to contract for verification
+
 `npx snarkjs zkey export soliditycalldata public.json proof.json`
+
 The output that we got, we need to pass that to the `verifyProof` function of the contract.
