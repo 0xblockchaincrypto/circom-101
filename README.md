@@ -2,6 +2,8 @@
 
 
 ## About the Repository
+<img width="867" alt="image" src="https://github.com/srv-smn/circom-101/assets/86356248/0a1a5d94-1180-4fb6-b9c3-1244c3b18dbc">
+
 This branch of the repository contains the code for implementing a `mimc` hashing function in circom and solidity.
 We had choosen the power of 5 with 10 rounds
 `(x + k + ci) power 5` for `10 times`
