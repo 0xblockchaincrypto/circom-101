@@ -1,4 +1,7 @@
 ## MiMC Hashing
+<img width="937" alt="image" src="https://github.com/srv-smn/circom-101/assets/86356248/91254ae0-57c6-4c42-a844-c6123ef5182f">
+<img width="879" alt="image" src="https://github.com/srv-smn/circom-101/assets/86356248/ed64fe01-3bd7-466a-b28a-f0ee10d2c07b">
+
 Feistel cryptographic construction and its diffusion properties. Feistel is a cryptographic scheme that runs the input through multiple rounds of the same operation to obscure information. Each round of Feistel has two inputs and two outputs, which can be chained together to form a multiple operation. The goal is to securely encode or hash the information after going through several rounds.
 
 The diagram for one round of Feistel is explained. It consists of a left-hand side (L) and a right-hand side (R). The right-hand side is fed into a function (F) along with a key (Ki) to produce an output (M). This output (M) is used to encrypt the left-hand side input. The left-hand side and M go through binary addition, resulting in the encrypted output from the left-hand side. Then, the encrypted output from the left-hand side and the right-hand side are exchanged to prepare for the next round.
@@ -9,7 +12,8 @@ The source of randomness in Feistel comes from the fact that the reference point
 
 Additionally, the F function in Feistel is based on the Mimic-5 algorithm. It adds a constant (CI), generated beforehand, to the right-hand side input along with the key to construct the mask for encryption.
 
-//
+<img width="935" alt="image" src="https://github.com/srv-smn/circom-101/assets/86356248/98f25913-4db7-4260-a3ad-3e3ccc62fa43">
+
 
 "sponge construction" and its application in Feistel MiMC (Mimic) encryption. The speaker explains that traditional hashing functions are "shotgun" functions, taking one input and producing one output. However, there are situations where multiple inputs need to be hashed together or multiple outputs are required. The sponge construction is a flexible solution for adapting hashing or encryption routines to handle multiple inputs and produce multiple outputs.
 
